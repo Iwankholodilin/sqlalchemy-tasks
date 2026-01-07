@@ -26,5 +26,41 @@ Base.metadata.create_all(engine)
 
 
 # BEGIN (write your solution here)
+from sqlalchemy.orm import Session
 
+def add_books(engine):
+    # Создаем сессию
+    SessionLocal = sessionmaker(bind=engine)
+    session = SessionLocal()
+    
+    try:
+        # Создаем первую книгу
+        book1 = Book(
+            title='To Kill a Mockingbird',
+            author='Harper Lee',
+            published_year=1960
+        )
+        
+        # Создаем вторую книгу
+        book2 = Book(
+            title='1984',
+            author='George Orwell',
+            published_year=1949
+        )
+        
+        # Добавляем книги в сессию
+        session.add(book1)
+        session.add(book2)
+        
+        # Коммитим изменения в базу данных
+        session.commit()
+        
+    except Exception as e:
+        # В случае ошибки откатываем изменения
+        session.rollback()
+        raise e
+        
+    finally:
+        # Всегда закрываем сессию
+        session.close()
 # END

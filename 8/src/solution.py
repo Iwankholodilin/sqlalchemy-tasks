@@ -19,5 +19,19 @@ session = session_maker()
 
 
 # BEGIN (write your solution here)
-
+async def get_all_movies(session):
+    stmt = select(Movie).options(selectinload(Movie.director))
+    result = await session.execute(stmt)
+    movies = result.scalars().all()
+    
+    formatted_movies = []
+    for movie in movies:
+        formatted_movie = f"{movie.title} by {movie.director.name}, " \
+                         f"released on {movie.release_date}, " \
+                         f"duration: {movie.duration} min, " \
+                         f"genre: {movie.genre}, " \
+                         f"rating: {movie.rating}"
+        formatted_movies.append(formatted_movie)
+    
+    return formatted_movies
 # END

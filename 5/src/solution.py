@@ -15,5 +15,21 @@ Base.metadata.create_all(engine)
 
 
 # BEGIN (write your solution here)
-
+def get_movies_with_directors(session):
+    stmt = (select(Movie, Director)
+            .join(Director, Movie.director_id == Director.id)
+            .order_by(Movie.title))
+    
+    results = session.execute(stmt).all()
+    
+    formatted_movies = []
+    for movie, director in results:
+        formatted_movie = (f"{movie.title} by {director.name}, "
+                          f"released on {movie.release_date}, "
+                          f"duration: {movie.duration} min, "
+                          f"genre: {movie.genre}, "
+                          f"rating: {movie.rating}")
+        formatted_movies.append(formatted_movie)
+    
+    return formatted_movies
 # END
